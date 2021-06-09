@@ -1,7 +1,22 @@
 <?php
 session_start();
-?>
 
+if ($_SESSION['username']) {
+    if (isset($_GET['id']) && !empty($_GET['id'])) {
+        require_once('db-connect.php');
+        $id = strip_tags($_GET['id']);
+        $sql = 'SELECT * FROM `projects` WHERE `project_id`=:id';
+        $query = $db->prepare($sql);
+        $query->bindValue(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+        $result = $query->fetch();
+    } else {
+        echo "l'url n'est pas valide";
+    }
+} else {
+    echo "vous n'êtes pas identifié";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +28,7 @@ session_start();
 </head>
 
 <body>
-    <form action="add-form-handler.php" method="post">
+    <form action="project-edit-form-handler.php" method="post">
 
         <div>
             <label for="input_title">Titre</label>
@@ -44,12 +59,13 @@ session_start();
             <input type="text" id="input_link" name="project_link">
         </div>
         <div>
+            <input type="hidden" name="project_id" value="<?= $result['project_id'] ?>">
             <input type="submit">
         </div>
 
-    </form>
-    <a href="home.php"><button>Retour</button></a>
 
+    </form>
+    <a href="project-details.php?id=<?= $result['project_id'] ?>">Retour</a>
 </body>
 
 </html>

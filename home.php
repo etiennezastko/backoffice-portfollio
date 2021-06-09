@@ -31,7 +31,9 @@ if ($_SESSION['username']) {
     <?php
 
     foreach ($result as $project) {
-        echo '<div class="color">' . $project['project_title'] . ' | ' . $project['project_context'] . '</div>';
+    ?>
+        <a href="project-details.php?id=<?= $project['project_id'] ?>"><?= $project['project_title'] ?></a>
+    <?php
     }
     ?>
 
